@@ -1,0 +1,186 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="/bower_components/polymer/lib/utils/render-status.html">
+
+
+<dom-module id="thatsdecent-flip-card">
+
+  <template>
+
+    <style >
+      :host {
+        display: block;
+        -webkit-perspective: 1000;
+        -moz-perspective: 1000;
+        -o-perspective: 1000;
+        perspective: 1000;
+        width: 320px;
+      	height: 427px;
+      }
+
+      .flip-container {
+      	-webkit-transition: 0.6s;
+      	-webkit-transform-style: preserve-3d;
+      	-moz-transition: 0.6s;
+      	-moz-transform-style: preserve-3d;
+        -o-transition: 0.6s;
+      	-o-transform-style: preserve-3d;
+      	transition: 0.6s;
+      	transform-style: preserve-3d;
+      	position: relative;
+
+      }
+
+      .front, .back {
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        -o-backface-visibility: hidden;
+        backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: #f8f8f8;
+        width: 320px;
+        height: 427px;
+        border-radius: 25px;
+
+      }
+
+      .back {
+        -webkit-transform: rotateY(180deg);
+        -moz-transform: rotateY(180deg);
+        -o-transform: rotateY(180deg);
+        transform: rotateY(180deg);
+      }
+
+      .back-title, .front-title {
+      	font-weight: bold;
+      	color: #88808a;
+      	position: absolute;
+      	top: 180px;
+      	left: 0;
+      	right: 0;
+      	text-align: center;
+      	text-shadow: 0.1em 0.1em 0.05em #acd7e5;
+      	font-family: Courier;
+      	font-size: 2em;
+      }
+
+      /*:host(:hover) .flip-container, */
+      :host(.hover) .flip-container {
+    		-webkit-transform: rotateY(180deg);
+    		-moz-transform: rotateY(180deg);
+        -o-transform: rotateY(180deg);
+    		transform: rotateY(180deg);
+      }
+    </style>
+
+    <div class="flip-container" id="container">
+      <div class="front">
+        <div class="front-logo"></div>
+        <div class="front-title">[[title]]</div>
+      </div>
+      <div class="back">
+        <div class="back-logo"></div>
+        <div class="back-title">I AM THE BACK</div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * `thatsdecent-flip-card`
+     * A flip card for displaying double sided content
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ThatsDecentFlipCard extends Polymer.Element {
+
+      constructor() {
+        //	Called when the element is upgraded
+        super();
+        console.log(this.getTimeStampForCallback('Constructor'));
+      }
+/*
+      connectedCallback() {
+        //Called when the element is added to a document.
+        super.connectedCallback();
+        console.log(this.getTimeStampForCallback('connectedCallback'));
+      }
+
+      disconnectedCallback() {
+        //Called when the element is removed from a document.
+        super.disconnectedCallback();
+        console.log(this.getTimeStampForCallback('disconnectedCallback'));
+      }
+*/
+      ready() {
+        //Called when the element is added to a document.
+        super.ready();
+        Polymer.RenderStatus.afterNextRender(this, function(){
+
+          console.log(this.getTimeStampForCallback(`value of ClickFlip is ${this.clickFlip}`));
+
+          if(this.clickFlip) {
+            this.addEventListener('click', this._handleClick);
+          }
+          else{
+            this.addEventListener('mouseover', this._handleMouseOver);
+            this.addEventListener('mouseout', this._handleMouseOut);
+          }
+        });
+        console.log(this.getTimeStampForCallback('ready'));
+      }
+
+      _handleClick(evt){
+        console.log(this.getTimeStampForCallback(`I got Clicked ${evt.target.localName}`));
+      }
+
+      _handleMouseOver(evt){
+        console.log(this.getTimeStampForCallback(`I got MousedOver ${evt.target.localName}`));
+        //Add Hover Class
+        this.classList.add('hover');
+      }
+
+      _handleMouseOut(evt){
+        console.log(this.getTimeStampForCallback(`I got MousedOut ${evt.target.localName}`));
+        // Remove the hover class
+        this.classList.remove('hover');
+      }
+
+      getTimeStampForCallback(_whichCallback) {
+        let cdate = new Date(Date.now());
+        let readableTimeStamp = `${_whichCallback} called :: ${cdate.toDateString()} ${cdate.toTimeString()}`
+        return readableTimeStamp;
+      }
+
+      static get is() { return 'thatsdecent-flip-card'; }
+
+      static get properties() {
+        return {
+          title: {
+            type: String,
+            value: 'Default Title'
+          },
+          clickFlip: {
+            type: Boolean,
+            notify: true,
+            reflectToAttribute: true,
+            value: false
+          },
+          width: {
+            type: Number,
+            notify: true,
+            reflectToAttribute: true,
+            value:
+          }
+        };
+      }
+
+    }
+
+    window.customElements.define(ThatsDecentFlipCard.is, ThatsDecentFlipCard);
+  </script>
+</dom-module>
