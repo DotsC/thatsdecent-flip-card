@@ -126,7 +126,7 @@
           if(this.clickFlip) {
             this.addEventListener('click', this._handleClick);
           }
-          else{
+          else {
             this.addEventListener('mouseover', this._handleMouseOver);
             this.addEventListener('mouseout', this._handleMouseOut);
           }
@@ -136,18 +136,31 @@
 
       _handleClick(evt){
         console.log(this.getTimeStampForCallback(`I got Clicked ${evt.target.localName}`));
+        console.log(this.flipped);
+        if(!this.flipped){
+          this.classList.add('hover');
+        }
+        else{
+          this.classList.remove('hover');
+        }
+        this.flipped = !this.flipped;
       }
 
       _handleMouseOver(evt){
         console.log(this.getTimeStampForCallback(`I got MousedOver ${evt.target.localName}`));
+        this.flipped = !this.flipped;
         //Add Hover Class
         this.classList.add('hover');
+        // Set flipped property to true
+        this.flipped = true;
       }
 
       _handleMouseOut(evt){
         console.log(this.getTimeStampForCallback(`I got MousedOut ${evt.target.localName}`));
         // Remove the hover class
         this.classList.remove('hover');
+        // Set flipped property to false
+        this.flipped = false;
       }
 
       getTimeStampForCallback(_whichCallback) {
@@ -156,10 +169,17 @@
         return readableTimeStamp;
       }
 
+
       static get is() { return 'thatsdecent-flip-card'; }
 
       static get properties() {
         return {
+          flipped:{
+            type: Boolean,
+            notify: true,
+            reflectToAttribute: true,
+            value: false
+          },
           title: {
             type: String,
             value: 'Default Title'
@@ -174,7 +194,7 @@
             type: Number,
             notify: true,
             reflectToAttribute: true,
-            value:
+            value: 10
           }
         };
       }
